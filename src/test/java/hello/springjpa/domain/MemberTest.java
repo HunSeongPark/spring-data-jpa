@@ -1,5 +1,6 @@
 package hello.springjpa.domain;
 
+import hello.springjpa.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,6 +23,9 @@ class MemberTest {
 
     @PersistenceContext
     EntityManager em;
+
+    @Autowired
+    MemberRepository memberRepository;
 
     @Test
     void testEntity() {
@@ -49,5 +54,26 @@ class MemberTest {
             System.out.println("member = " + member);
             System.out.println("member.team = " + member.getTeam());
         }
+    }
+
+    @Test
+    void pureJpaAuditingTest() throws InterruptedException {
+
+        // given
+        Member member = new Member("member1");
+        memberRepository.save(member); // @PrePersist
+
+        Thread.sleep(100);
+        member.changeUsername("member2");
+
+        em.flush(); // @PreUpdate
+        em.clear();
+
+        // when
+        Member findMember = memberRepository.findById(member.getId()).get();
+
+        // then
+        System.out.println("findMember.createdDate = " + findMember.getCreatedDate());
+        System.out.println("findMember.modifiedDate = " + findMember.getModifiedDate());
     }
 }
