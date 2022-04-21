@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Hunseong on 2022/04/22
@@ -26,4 +27,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("select m from Member m where m.username in :names")
     List<Member> findByNames(@Param("names")Collection<String> names);
+
+
+//    Member findByUsername(String username); // 단건조회
+//    List<Member> findByUsername(String username); // 컬렉션
+//    Optional<Member> findByUsername(String username); // 옵셔널
+
 }
