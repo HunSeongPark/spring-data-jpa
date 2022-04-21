@@ -44,4 +44,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Modifying(clearAutomatically = true) // 벌크 수정 후 영속성 컨텍스트 초기화 여부
     @Query("update Member m set m.age = m.age + 1 where m.age >= :age")
     int bulkAgePlus(@Param("age") int age);
+
+    @Query("select m from Member m join fetch m.team")
+    List<Member> findMemberFetchJoin();
+
 }
