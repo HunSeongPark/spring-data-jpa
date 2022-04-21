@@ -14,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -263,5 +264,24 @@ class MemberRepositoryTest {
         }
 
         // 총 쿼리 횟수 : members + team 페치 조인 쿼리 1
+    }
+
+    @Test
+    public void queryHint() throws Exception {
+        // given
+        memberRepository.save(new Member("member1", 10));
+        em.flush();
+        em.clear();
+
+        // when
+        Member member = memberRepository.findReadOnlyByUsername("member1");
+        member.changeUsername("member2");
+
+        em.flush(); // readOnly=true Query hint를 통해 Update Query 실행X
+        em.clear();
+
+        // then
+        Member findMember = memberRepository.findById(member.getId()).get();
+        assertThat(findMember.getUsername()).isEqualTo("member1");
     }
 }
