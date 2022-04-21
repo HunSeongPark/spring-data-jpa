@@ -72,6 +72,5 @@ class MemberJpaRepositoryTest {
         memberJpaRepository.delete(member2);
         long deletedCount = memberJpaRepository.count();
         assertThat(deletedCount).isEqualTo(0);
-
     }
 }
