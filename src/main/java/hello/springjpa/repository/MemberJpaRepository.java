@@ -10,7 +10,7 @@ import javax.persistence.PersistenceContext;
  * Created by Hunseong on 2022/04/21
  */
 @Repository
-public class MemberRepository {
+public class MemberJpaRepository {
 
     @PersistenceContext
     private EntityManager em;
