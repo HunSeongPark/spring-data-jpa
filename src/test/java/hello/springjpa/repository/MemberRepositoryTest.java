@@ -239,4 +239,29 @@ class MemberRepositoryTest {
 
         // 총 쿼리 횟수 : members + team 페치 조인 쿼리 1
     }
+
+    @Test
+    public void findAllEntityGraph() throws Exception {
+        //given
+        //member1 -> teamA
+        //member2 -> teamB
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
+        memberRepository.save(new Member("member1", 10, teamA));
+        memberRepository.save(new Member("member2", 20, teamB));
+        em.flush();
+        em.clear();
+
+        //when
+        List<Member> members = memberRepository.findAll();
+
+        //then
+        for (Member member : members) {
+            member.getTeam().getName(); // @EntityGraph를 통해 이미 team까지 가져왔으므로 쿼리 안나감
+        }
+
+        // 총 쿼리 횟수 : members + team 페치 조인 쿼리 1
+    }
 }
