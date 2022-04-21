@@ -74,6 +74,29 @@ class MemberTest {
 
         // then
         System.out.println("findMember.createdDate = " + findMember.getCreatedDate());
-        System.out.println("findMember.modifiedDate = " + findMember.getModifiedDate());
+//        System.out.println("findMember.modifiedDate = " + findMember.getModifiedDate());
+    }
+
+    @Test
+    void springJpaAuditingTest() throws InterruptedException {
+
+        // given
+        Member member = new Member("member1");
+        memberRepository.save(member);
+
+        Thread.sleep(100);
+        member.changeUsername("member2");
+
+        em.flush();
+        em.clear();
+
+        // when
+        Member findMember = memberRepository.findById(member.getId()).get();
+
+        // then
+        System.out.println("findMember.createdDate = " + findMember.getCreatedDate());
+        System.out.println("findMember.createdBy = " + findMember.getCreatedBy());
+        System.out.println("findMember.modifiedDate = " + findMember.getLastModifiedDate());
+        System.out.println("findMember.modifiedBy = " + findMember.getLastModifiedBy());
     }
 }
