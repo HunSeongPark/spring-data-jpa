@@ -1,6 +1,8 @@
 package hello.springjpa.repository;
 
 import hello.springjpa.domain.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -32,5 +34,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 //    Member findByUsername(String username); // 단건조회
 //    List<Member> findByUsername(String username); // 컬렉션
 //    Optional<Member> findByUsername(String username); // 옵셔널
+
+    Page<Member> findByAge(int age, Pageable pageable);
 
 }
