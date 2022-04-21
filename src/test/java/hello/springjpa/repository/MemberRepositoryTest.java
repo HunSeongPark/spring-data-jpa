@@ -160,4 +160,24 @@ class MemberRepositoryTest {
         assertThat(page.isFirst()).isTrue(); //첫번째 항목인가?
         assertThat(page.hasNext()).isTrue(); //다음 페이지가 있는가?
     }
+
+    @Test
+    public void bulkUpdate() {
+        //given
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 19));
+        Member member3 = memberRepository.save(new Member("member3", 20));
+        memberRepository.save(new Member("member4", 21));
+        memberRepository.save(new Member("member5", 40));
+
+        //when
+        int resultCount = memberRepository.bulkAgePlus(20);
+
+        // clearAutomatically=true 속성을 통해 자동으로 벌크 업데이트 후 영속성 컨텍스트 초기화
+        Member findMember = memberRepository.findById(member3.getId()).get();
+
+        //then
+        assertThat(resultCount).isEqualTo(3);
+        assertThat(findMember.getAge()).isEqualTo(21);
+    }
 }
